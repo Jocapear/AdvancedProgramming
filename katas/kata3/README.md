@@ -1,49 +1,32 @@
 =========================================================
-Kata 2: 420. Strong Password Checker
+Kata 3: 657. Judge Route Circle
 ========================================================
 
-A password is considered strong if below conditions are all met:
+Initially, there is a Robot at position (0, 0). Given a sequence of its moves, judge if this robot makes a circle, which means it moves back to the original place.
 
-    It has at least 6 characters and at most 20 characters.
-    It must contain at least one lowercase letter, at least one uppercase letter, and at least one digit.
-    It must NOT contain three repeating characters in a row ("...aaa..." is weak, but "...aa...a..." is strong, 
-	assuming other conditions are met).
+The move sequence is represented by a string. And each move is represent by a character. The valid robot moves are R (Right), L(Left), U (Up) and D (down). 
+The output should be true or false representing whether the robot makes a circle.
 
-Write a function strongPasswordChecker(s), that takes a string s as input, and return the MINIMUM change required to 
-make s a strong password. If s is already strong, return 0.
+Example 1:
 
-Insertion, deletion or replace of any one character are all considered as one change.
+Input: "UD"  Output: true  
 
+Example 2:
 
+Input: "LL"  Output: false  
 
 ------------------------------------------------------------------------------------------------------------
 Constrains:
-	-Only letters and digits
-	-More than 20 characters is a weak password
-	-The string can't be empty
-	-There are only numbers and letters
+	-Only "L", "R", "D", "U" letters are accepted
+	-The letters are only uppercase
 
-One simple solution is to have flags for the lower caseletter, uppercase letter and digit. Update the flags while iterating the
-string and count the number of characters. That will only tell us if our password is strong. To detect flaws we could have a variable
-that keeps track of the extra characters we have, "aaaa" would count two extra or replasable characters. For this we are going to 
-need a variable that saves our last seen character and based on that keep counting if we still see it. Also, if a flag is still
-false we could count it as a character that we need to insert. Finally, if our string is short we add to a variable of insertions
-we need, if its to long we add to a variable of deletions. For each insertion we need we can replace a deletion.
+This problem can be easily seen as a grid and each letter represents a movement in the grid. We need to iterate trough the whole word and simulate the robot movement
+in the grid. Each movement is going to add or substract 1 either in the X axis or the Y axis. For each letter we are going to use these cases:
+	L -> (-1, 0)
+	R -> (+1,0)
+	U -> (0,+1)
+	D -> (0,-1)
+To determine if it ends in the same place at the end of passing through the whole word we just have to check if it is equal to (0,0).
 
-Now we need to solve the special cases. For that i'm going to need a few input examples.
-"aaaaa" Size = 5
-For this case I have 3 extra letters, I'm still missing a uppercase and a digit, and to get to the minimum size I need one more
-character. The minimum move is 2 since i can only replace one in the middle with an uppercase and then add one digit like this
-"aaAaa2". To get this done in my code I need to know the amount of characters in a row I have to see how many replacements I
-need to cut the chain. For 3 I need 1, for 4 I need 1 too, for 5 I need 1 too, for 6 I need 2, 7 I need 2, 8 I need 2, 9 I need
-3... this patter tells me that the size of the chain divided by 3 and a floor tells me the number of replacements I need to make.
-
-There are a lot more cases, the number of replacements is defined by the maximum between repeated characters and number of
-character types remaining. If we need to replace 5 characters to break repetitivity, but we are also missing a number and an
-uppercase we could simply say that we need 5 replacements, only taking the maximum of the two as changing a repeated letter 
-for a number or an uppercase does 2 corrections at the same time. Same could be said if we have to add an uppercase and a number
-and we have to replace just one letter to break repetitive instances, we only need 2 moves(the maximum of the both), one for 
-replacing the letter for a number and another for adding an uppercase.
-
-I programmed my solution trying to avoid harcoding numbers, all the static numbers are defined on the top of the code so I can 
-use them as variables. It´s still very harcoded tho, but I wrote a comment trying to explaing where those numbers came from. 
+The iteration of the string is going to cost us O(n). For each letter we have to check the movement in the grid and its really just several "if"'s cases for each of 
+the four letters and inside we just need to make one opperation so we can count it as constant time O(1). Overall the program is just O(n). 

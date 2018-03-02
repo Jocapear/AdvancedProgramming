@@ -1,0 +1,19 @@
+
+# practica6
+
+We are going to build our first library, it is a hash table that works the next way:
+	key -> String = char *
+	value -> anything = void*
+The value is going to use a void pointer to be able to control any variable type.
+On each value we are going to control an array for each index, this means that the key is going to lead us to a position on the hashtable that contains an array with collitions.
+Then, we are going to search trough that array for the key, then we can find the real value.
+
+Our hash table is going to be able to resize automatically with realloc. Each time the array of collisions gets full it´s going to increment the size of the hash by two and then it's
+going to rehash all the elements. Each array in the hash is going to have the size and the index, each time both variables are equal means that it needs to be resized. 
+
+To avoid pointer and memory conflics we are going to take care of the pointers with strdump and if needed move a memory block with memcpy. 
+
+The hash table is going to need the next functions:
+	-init: I's going to star a new hash table with null values
+	-insert: Inserts a new element with a key and a value, uses a hash function to find an index. Before inserting it is going to check the size to resize if needed.
+	-get: I's going to search a value in the hash. First hashing the key and then linearly looking for the key in the array. If the element is found returns it, if not returns null.

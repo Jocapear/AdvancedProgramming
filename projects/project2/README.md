@@ -70,7 +70,7 @@ the trick is to never check the corners and just the necessary blocks in the mid
 To do this calculation I did a few experiments, to check if a W of 3 fits in a 4 you only need to check
 the 1 of the middle blocks, if you hace a W of 2 in a 4 you need to check the 2 middle blocks, looking for
 a patter here I decided to perform more cases(Remember that this is only for checking that a ship is not there):
-R W		R W		R W
+C W		C W		C W
 5 2	3	7 1	7	8 1 	8
 5 3	1	7 2	5	8 2	6
 5 4	1	7 3	3	8 3	4
@@ -81,41 +81,79 @@ R W		R W		R W
 6 5	1			8 8	1
 6 6 	1
 I smell a pattern, lets see. I detected these characteristics:
--If W is 1 it takes R
--If W is lesser or equal than the half of R then you have to do (Wx2)-2 to get the empty spaces of the corners
-	and substract that to R.
--If W is greater than the half of R then you need to check only one block.
+-If W is 1 it takes C
+-If W is lesser or equal than the half of C then you have to do (Wx2)-2 to get the empty spaces of the corners
+	and substract that to C.
+-If W is greater than the half of C then you need to check only one block.
 
-This will be useful to get the number of turns we need for each row each time we have more that 1 row to check,
+This will be useful to get the number of turns we need for each row each time we have more than 1 row to check,
 this calculation is performed on all the rows except the last one. For the last row we need to do something a little
 bit different, that is not only checking that it exists but also add the extra slots you need to find the complete ship.
 This means we will take the a little bit more than the half of the row covered.
 Doing a experiment with different column sizes I realized that with a W of 2 finding a ship always take
 C-1 turns, and that if W = C-1 then you need C turns. To be more specific about these findings I tested several cases
 again:
-R W		R W		R W
+C W		C W		C W
 5 2	2	7 1	7	8 1 	8
 5 3	3	7 2	6	8 2	7
 5 4	4	7 3	5	8 3	6
-5 5	5	7 4	4	8 4	5
-6 2	5	7 5	5	8 5	5
-6 3	4	7 6	6	8 6	6
-6 4	4	7 7	7	8 7	7
-6 5	5			8 8	8
+5 5	5	7 4	5	8 4	5
+6 2	5	7 5	6	8 5	6
+6 3	4	7 6	7	8 6	7
+6 4	5	7 7	7	8 7	8
+6 5	6			8 8	8
 6 6 	6
 This one has a very similar pattern but with different results.
--If W is 1 it takes R turns
--If W is lesser or equal than the half of R then it takes R-(W-1) turns
--If W is greter than the half of R then it takes W turns.
+-If W is 1 it takes C turns
+-If W is lesser or equal than the half of C then it takes C-(W-1) turns
+-If W is greater than the half of C then it takes W+1 turns.
 
 With both parts of the process already solved the last thing we need to do is sum the turns taken for each row
 and that should give us the final result.
 
 <<<SOLUTION>>>  
-
+The solution would be something like this:
+int brattleship(int r, int c, int w){
+	int rowi;
+	int turns = 0;
+	for (rowi = 1; rowi <= r; ++rowi)
+	{
+		//printf("We are in %d\n",rowi );
+		if (rowi == r) //On the last row
+		{
+			if (w == 1)
+			{
+				//printf("W = 1\n");
+				turns += c;
+			}else if((float)w <= ((float)c/2)){
+				printf("Less or equal than the half\n");
+				turns += c-(w-1);
+			}else{
+				printf("Greater than the half\n");
+				if (w == c)
+				{
+					turns += w;
+				}else{
+					turns += w+1;
+				}	
+			}
+		}else{ //Any other row
+			if (w == 1)
+			{
+				turns += c;
+			}else if((float)w <= ((float)c/2)){
+				turns += c-((w*2)-2);
+			}else{
+				turns += 1;
+			}
+		}
+	}
+	return turns;
+}
 
 <<<ANALYSIS>>>
 
+This solution takes 
 
 
 

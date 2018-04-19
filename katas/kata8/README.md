@@ -1,50 +1,56 @@
 =================================================================================================
-###Kata 6: Shadows of the Knight - Episode 1
+###Kata 8: inflight entertainment system
 =================================================================================================
 
-What will I learn?
+You've built an inflight entertainment system with on-demand movie streaming.
 
-Binary searchIntervals
+Users on longer flights like to start a second movie right when their first one ends, but they complain that the plane usually lands before they can see the ending. So you're building a feature for choosing two movies whose total runtimes will equal the exact flight length.
 
-You have to manage indexes and list of a 2 dimensional array in this puzzle. You also discover the binary search algorithm and finally, it makes you know that batman is really good at cleaning windows.
-External resources Multidimensional arrayBinary search2D Binary Search explained by Gaurav Sen
-Statement
+Write a function that takes an integer flight_length (in minutes) and a list of integers movie_lengths (in minutes) and returns a boolean indicating whether there are two numbers in movie_lengths whose sum equals flight_length.
 
-The goal of this puzzle is to guess the coordinate of a bomb (line and column of a 2 dimensional array). You will have to make a guess at each step of the puzzle and adjust it from given feedbacks. Of course, you have a limited number of guess.
+When building your function:
+
+    Assume your users will watch exactly two movies
+    Don't make your users watch the same movie twice
+    Optimize for runtime over memory
 
 
 ---------------------------------------------------------------------------------------------------------------------------------------------
-Before each jump, the heat-signature device will provide Batman with the direction of the bombs based on Batman current position:
+Lets say that the input is a list if touples, the first value is the name of the movie and the second value is the length of it. Also, we receive an extra number that is the flight length.
+Our function is going to receive then a list and an integer.
 
-    U (Up)
-    UR (Up-Right)
-    R (Right)
-    DR (Down-Right)
-    D (Down)
-    DL (Down-Left)
-    L (Left)
-    UL (Up-Left)
+It is possible that multiple answers exists, for example:
+	For a flight that lasts 3 hours we could watch two movies that last 1 hour and 2 hours in different order.
+	1 -> 2 = 3
+	2 -> 1 = 3
+I'm going to create a solution that takes only the first answer it finds.
 
+As the problem is asking for runtime over memory I think I need a hash table, that would make the searches more time efficient.
+First I have to initialize the hash table, each element in the list is going to be saved in the hashing table with the movie's length as the key and the movie's name as the value.
+If a movie has a lenght greater than the flight lenght then it not saved in the hash table as the user would never finish watching it.
+I use the movie's lenght as the key because fo each movie I'm looking for another movie that completes the flight time, I can search by the movie's length and get all the movies that last that time.
 
-Your mission is to program the device so that it indicates the location of the next window Batman should jump to in order to reach the bombs' room as soon as possible.
+This will lead us toa problem. If a movie of half the lenght of the flight is taken a the first movie, then the same movie can be returned as the second movie as well when I look at it at the hash table.
+A conditional that checks that the movie is not the same can solve this problem.
 
-Buildings are represented as a rectangular array of windows, the window in the top left corner of the building is at index (0,0).
+The solution would go like this:
 
+def findTwoMoviesForFlight(moviesList, flightLenght):
+	moviesLenghtDict = {}
+	for movie in moviesList:
+		if movie.lenght < flightLenght:
+			moviesLenghtDict[movie.lenght] = movie.name
+	
+	for movieTuple in moviesLenghtDict:
+		remainingTime = flightLenght - movieTuple.key 
+		if moviesLenghtDict[remainingTime] != null:
+			if moviesLenghtDict[remainingTime] != movieTuple.value:
+				return movieTuple.value + moviesLenghtDict[remainingTime] 
+	return 'No pair of movies found for flight time'
 
-Constraints
-1 = W = 10000
-1 = H = 10000
-2 = N = 100
-0 = X, X0 < W
-0 = Y, Y0 < H
-Response time per turn = 150ms
-Response time per turn = 150ms
+As I was writing this solution I realized that the problem was a lot easier.
+Input: int flightLength, int[] moviesLenght
+Output: bool - If two numbers are found
 
-We only know the size of the building, batman's position and a hit to the bomb. Every time we make a jump is better to make it the closest we can from our objective, to achieve this we can move half the distance to the corner of the building and each turn keep doing the same. 
-Similar to a binary search, if we jump half the distance each turn we will reach our target faster than just checking each window.
-We just need to check the direction to make the jumps in the 8 directions.
-For each direction I calculate how many windows i have left and calculate the half of them, then substract or add that to the actual positiona accordingly to the direction. To avoid getting off the building i'm going to have coordinates that restric the area where batman can jump.
+As my previous solution was similar I'm going to stick with that, I'm just changing some little things. 
 
-This solution is going to have 8 if cases where it checks the direction, then execute a binary search for both dimensions. The solution is making two binary search at the same time, each has log(n) complexity. So the final complexity is log(max(n,m)) as depends of the greatest size
-of the building. 
- 

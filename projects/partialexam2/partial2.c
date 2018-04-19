@@ -50,7 +50,6 @@ int checkPatient(char* patientDNA,char* virusDNA){
 	
 int main(int argc, char const *argv[])
 {
-	
 	char patientDNA[] = "abbab";
 	char virusDNA[] = "ba";
 
@@ -59,7 +58,6 @@ int main(int argc, char const *argv[])
 
 	char patientDNA3[] = "banana";
 	char virusDNA3[] = "nan";
-
 
 	checkPatient(patientDNA, virusDNA);
 	checkPatient(patientDNA2, virusDNA2);

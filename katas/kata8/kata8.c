@@ -9,7 +9,7 @@
  **/
 int main()
 {
-	int * moviesLenght[10] = {60,180,120,120,180,120,60,120,60,60}  
+	int * moviesLenght[10] = {60,180,120,120,180,120,60,120,60,60};
 	int flightLenght = 180;
 
     HashInt hash;
